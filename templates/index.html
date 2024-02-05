@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foto Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #upload-form {
+            width: 300px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #upload-form input[type="file"] {
+            margin-bottom: 10px;
+        }
+        #upload-form input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #upload-form input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        #image-preview {
+            max-width: 100%;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<form action="{{ url_for('upload')}}" method="get"></form>
+<body>
+    <div id="upload-form">
+        <h2>Foto Upload</h2>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <input type="file" name="photo" id="photo" accept="image/*" required><br>
+            <textarea name="description" id="description" placeholder="Beschrijving"></textarea><br>
+            <input type="submit" value="Uploaden">
+        </form>
+        <img id="image-preview" src="#" alt="Voorbeeld">
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('photo');
+        const imagePreview = document.getElementById('image-preview');
+
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    imagePreview.style.display = 'block';
+                    imagePreview.src = reader.result;
+                }
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.style.display = 'none';
+                imagePreview.src = '#';
+            }
+        });
+    </script>
+</body>
+</html>
