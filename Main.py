@@ -4,17 +4,11 @@ from flask import Flask, request, render_template
 # Create an instance of the Flask class
 app = Flask(__name__)
 
+
 # Define a route for the app. This route accepts both POST and GET requests.
 @app.route('/', methods=['POST', 'GET'])
 def upload():
-    # Print a message to the console
-    print("Bijna")
-    # Print the HTTP method used in the request
-    print(request.method)
-    # If the HTTP method is POST
     if request.method == "POST":
-        # Print a message to the console
-        print("JA")
         # If there is a file named 'photo' in the request
         if "photo" in request.files:
             # Get the file from the request
@@ -27,10 +21,13 @@ def upload():
                 return 'No selected file'
             # Save the uploaded file to the 'uploads' directory
             photo.save('uploads/' + photo.filename)
-            # Print the description to the console
-            print(description)
+            # Write the description to a .json file
+            descrFile = open("Uploads/description.json", "w")
+            descrFile.write(description)
+            descrFile.close()
     # Render the 'index.html' template
     return render_template("index.html")
+
 
 # If this script is run directly (not imported as a module)
 if __name__ == '__main__':

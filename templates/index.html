@@ -4,46 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Foto Upload</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-        }
-        #upload-form {
-            width: 300px;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        #upload-form input[type="file"] {
-            margin-bottom: 10px;
-        }
-        #upload-form input[type="submit"] {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        #upload-form input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-        #image-preview {
-            max-width: 100%;
-            margin-top: 10px;
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <div class="overlay"></div>
     <div id="upload-form">
         <h2>Foto Upload</h2>
         <form id="uploadForm" action="{{ url_for('upload')}}" method="post" enctype="multipart/form-data">
@@ -53,8 +17,6 @@
         </form>
         <img id="image-preview" src="#" alt="Voorbeeld">
     </div>
-
-
     <script>
         const fileInput = document.getElementById('photo');
         const imagePreview = document.getElementById('image-preview');
