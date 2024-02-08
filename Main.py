@@ -1,8 +1,21 @@
 # Import the necessary modules from the Flask library
 from flask import Flask, request, render_template
+from Data_Core import *
 
 # Create an instance of the Flask class
 app = Flask(__name__)
+
+
+@app.route('/admin', methods=["POST", "GET"])
+def admin():
+    if request.method == "POST":
+        username = request.form['username']
+        password = request.form['password']
+        print(username)
+        print(password)
+        # Now you have the username and password, you can perform authentication here
+        # Example: Check if the username and password match a user in the database
+    return render_template('admin.html')
 
 
 # Define a route for the app. This route accepts both POST and GET requests.
@@ -20,6 +33,8 @@ def upload():
                 # Return an error message
                 return 'No selected file'
             # Save the uploaded file to the 'uploads' directory
+            print(afbeelding_met_beschrijving_uploaden(bytes(photo.read()), description))
+
             photo.save('uploads/' + photo.filename)
             # Write the description to a .json file
             descrFile = open("Uploads/description.json", "w")

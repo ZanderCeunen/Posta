@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin-style.css') }}"> <!-- Admin-specific CSS file -->
+</head>
+<body>
+    <a href="/" class="posta-button">Posta</a>
+    <div class="login-container">
+        <h2>Admin Login</h2>
+        <form id="loginForm" method="post">
+            <input type="text" name="username" id="username" placeholder="Gebruikersnaam" required><br>
+            <input type="password" name="password" id="password" placeholder="Wachtwoord" required><br>
+            <input type="submit" value="Inloggen">
+        </form>
+    </div>
+</body>
+</html>

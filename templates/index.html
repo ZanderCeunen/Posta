@@ -9,13 +9,14 @@
 </head>
 <body>
     <a href="/" class="posta-button">Posta</a>
+    <a href="/admin" class="admin-button">Admin Login</a>
     <div class="overlay"></div>
     <div id="upload-form">
         <h2>Foto Upload</h2>
         <form id="uploadForm" action="{{ url_for('upload')}}" method="post" enctype="multipart/form-data">
             <label class="custom-file-upload">
                 <input type="file" name="photo" id="photo" accept="image/*" required>
-                Kies een foto
+                Kies een foto<br>
             </label><br>
             <textarea name="description" id="description" placeholder="Beschrijving"></textarea><br>
             <input type="submit" value="Uploaden">

@@ -1,5 +1,5 @@
 body {
-    background-image: url("/static/tenniscollage.png");
+    background-image: url("/static/achtergrond.png");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -34,7 +34,21 @@ body {
 .posta-button:hover {
     background-color: #0056b3;
 }
+.admin-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    z-index: 2;
+}
 
+.admin-button:hover {
+    background-color: #0056b3;
+}
 
 #upload-form {
     position: absolute;
@@ -61,7 +75,7 @@ body {
     cursor: pointer;
 }
 
-#upload-form input[type="file"]:hover {
+.custom-file-upload:hover {
     background-color: #0056b3;
 }
 
