@@ -17,7 +17,7 @@ def haal_laatste_id_op() -> int:
     """Haal het laatste ID op uit de photos tabel."""
     verbinding = maak_verbinding_met_database()
     cursor = verbinding.cursor()
-    cursor.execute("SELECT MAX(id) FROM photos;")
+    cursor.execute("SELECT MAX(id) FROM info;")
     resultaat = cursor.fetchone()[0] or 0
     cursor.close()
     verbinding.close()
@@ -29,7 +29,7 @@ def sla_afbeelding_op(foto_locatie: str, id: int) -> None:
     verbinding = maak_verbinding_met_database()
     cursor = verbinding.cursor()
     sql_command = f"""
-        UPDATE photos
+        UPDATE info
         SET picture = %s
         WHERE id = %s;
     """
@@ -44,7 +44,7 @@ def sla_beschrijving_op(beschrijving: str, id: int) -> None:
     verbinding = maak_verbinding_met_database()
     cursor = verbinding.cursor()
     sql_command = f"""
-        UPDATE photos
+        UPDATE info
         SET description = %s
         WHERE id = %s;
     """
@@ -60,7 +60,7 @@ def afbeelding_met_beschrijving_uploaden(foto_locatie: str, beschrijving: str) -
     verbinding = maak_verbinding_met_database()
     cursor = verbinding.cursor()
     sql_command = f"""
-        INSERT INTO photos (id, picture, description)
+        INSERT INTO info (id, picture, description)
         VALUES (%s, %s, %s);
     """
     cursor.execute(sql_command, (id, foto_locatie, beschrijving))
@@ -76,3 +76,13 @@ def afbeelding_beschrijving_wijzigen(id: int, foto_locatie: str = None, beschrij
         sla_afbeelding_op(foto_locatie, id)
     if beschrijving:
         sla_beschrijving_op(beschrijving, id)
+
+def haal_data_op() -> Tuple[str, int]:
+    """Haal de foto en beschrijving op uit de photos tabel."""
+    verbinding = maak_verbinding_met_database()
+    cursor = verbinding.cursor()
+    cursor.execute("SELECT id, picture, description FROM info;")
+    resultaat = cursor.fetchall()
+    cursor.close()
+    verbinding.close()
+    return resultaat
