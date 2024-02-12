@@ -25,7 +25,7 @@ def maak_gebruiker(gebruiker_db, wachtwoord_db):
 def maak_database_en_tabel():
     """Maak een nieuwe database en tabel aan."""
     voer_commando_uit('mysql -u root -p -e "CREATE DATABASE dbposta;"', "Fout tijdens het aanmaken van de databases.")
-    voer_commando_uit('mysql -u root -p -e "USE dbposta; CREATE TABLE Info (ID INT AUTO_INCREMENT PRIMARY KEY, Foto BLOB, Beschrijving TEXT);"', "Fout tijdens het aanmaken van de tabel.")
+    voer_commando_uit('mysql -u root -p -e "USE dbposta; CREATE TABLE info (ID INT AUTO_INCREMENT PRIMARY KEY, picture TEXT, description TEXT);"', "Fout tijdens het aanmaken van de tabel.")
 
 def main():
     """Hoofdfunctie."""
