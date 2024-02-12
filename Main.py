@@ -1,9 +1,31 @@
 # Import the necessary modules from the Flask library
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect, url_for, send_from_directory
+from flask_login import LoginManager, login_user, login_required, logout_user
 from Data_Core import *
+import hashlib
 
 # Create an instance of the Flask class
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'een geheime sleutel'
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+
+def hash_password(password):
+    sha1 = hashlib.sha1()
+    sha1.update(password.encode())
+    return sha1.hexdigest()
+
+
+correct_hash = "set your passwordhash here"
+correct_user = "Set your user here"
+
+
+@login_manager.user_loader
+def load_user(user):
+    if user == correct_user:
+        return True
 
 
 @app.route('/admin', methods=["POST", "GET"])
@@ -11,11 +33,26 @@ def admin():
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
-        print(username)
-        print(password)
+        if username == correct_user and hash_password(password) == correct_hash:
+            login_user(load_user(username))
+            return redirect(url_for('secure'))
         # Now you have the username and password, you can perform authentication here
         # Example: Check if the username and password match a user in the database
     return render_template('admin.html')
+
+
+@app.route('/dashboard')
+@login_required
+def secure():
+    items = haal_data_op()
+    return render_template('dashboard.html', items=items)
+
+
+@app.route('/logout', methods=['GET', 'POST'])
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('admin'))
 
 
 # Define a route for the app. This route accepts both POST and GET requests.
@@ -33,13 +70,10 @@ def upload():
                 # Return an error message
                 return 'No selected file'
             # Save the uploaded file to the 'uploads' directory
-            print(afbeelding_met_beschrijving_uploaden(bytes(photo.read()), description))
+            path = 'uploads/' + str(haal_laatste_id_op()) + ".jpg"
+            photo.save("static/" + path)
+            afbeelding_met_beschrijving_uploaden(path, description)
 
-            photo.save('uploads/' + photo.filename)
-            # Write the description to a .json file
-            descrFile = open("Uploads/description.json", "w")
-            descrFile.write(description)
-            descrFile.close()
     # Render the 'index.html' template
     return render_template("index.html")
 
