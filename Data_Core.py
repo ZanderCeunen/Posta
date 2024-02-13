@@ -86,3 +86,22 @@ def haal_data_op() -> Tuple[str, int]:
     cursor.close()
     verbinding.close()
     return resultaat
+
+def verwijder_data(id: int) -> bool:
+    """Verwijder de foto en beschrijving met het gegeven ID uit de database."""
+    verbinding = maak_verbinding_met_database()
+    cursor = verbinding.cursor()
+    sql_command = f"""
+        DELETE FROM info
+        WHERE id = %s;
+    """
+    try:
+        cursor.execute(sql_command, (id,))
+        verbinding.commit()
+        cursor.close()
+        verbinding.close()
+        return True
+    except:
+        cursor.close()
+        verbinding.close()
+        return False
