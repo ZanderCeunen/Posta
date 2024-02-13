@@ -1,12 +1,19 @@
-# Import the necessary modules from the Flask library
+# Import the necessary modules
 from flask import Flask, request, render_template, redirect, url_for, send_from_directory
 from flask_login import LoginManager, login_user, login_required, logout_user
 from Data_Core import *
 import hashlib
+import requests
 
 # Create an instance of the Flask class
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'een geheime sleutel'
+
+correct_hash = "set your passwordhash here"
+correct_user = "Set your user here"
+imgur_toegangstoken = "set your access token here"
+facebook_toegangstoken = "set your access token here"
+fb_id = "set your user or page id here"
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -18,8 +25,35 @@ def hash_password(password):
     return sha1.hexdigest()
 
 
-correct_hash = "set your passwordhash here"
-correct_user = "Set your user here"
+def post(foto_locatie: str, beschrijving: str) -> bool:
+    imgur_url = "https://api.imgur.com/3/image"
+    imgur_headers = {
+        "Authorization": f"Bearer {imgur_toegangstoken}"
+    }
+    imgur_data = {
+        "image": foto_locatie,
+        "type": "file"
+    }
+    imgur_response = requests.post(imgur_url, headers=imgur_headers, data=imgur_data)
+    if imgur_response.status_code == 200:
+        foto_url = imgur_response.json()["data"]["link"]
+        # Maak de URL voor de Facebook API-aanroep
+        facebook_url = f"https://graph.facebook.com/{fb_id}/photos"
+        facebook_data = {
+            "access_token": facebook_toegangstoken,
+            "url": foto_url,
+            "caption": beschrijving
+        }
+        facebook_response = requests.post(facebook_url, data=facebook_data)
+        # Controleer de statuscode van het antwoord
+        if facebook_response.status_code == 200:
+            return True
+        else:
+            # Er is iets misgegaan met de Facebook API
+            return False
+    else:
+        # Er is iets misgegaan met de Imgur API
+        return False
 
 
 @login_manager.user_loader
@@ -41,12 +75,25 @@ def admin():
     return render_template('admin.html')
 
 
-@app.route('/dashboard')
+@app.route('/dashboard', methods=['POST', 'GET'])
 @login_required
 def secure():
     items = haal_data_op()
+    if request.method == "POST":
+        for item in items:
+            id = item[0]
+            foto_locatie = item[1]
+            beschrijving = item[2]
+            if f"select-{id}" in request.form:
+                new_description = request.form.get(f"description-{id}", beschrijving)
+                if post(foto_locatie, new_description):
+                    if verwijder_data(id):
+                        os.remove("static/" + foto_locatie)
+            if f"description-{id}" in request.form:
+                new_description = request.form[f"description-{id}"]
+                sla_beschrijving_op(new_description, id)
+        return redirect(url_for('secure'))
     return render_template('dashboard.html', items=items)
-
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
