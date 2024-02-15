@@ -8,11 +8,29 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='401.css') }}"> <!-- Use appropriate CSS file -->
 </head>
 <body>
+    <div class="overlay"></div>
     <div class="error-container">
-        <h1>Error 401: Unauthorised</h1>
-        <p>U heeft geen toegang tot deze pagina.
-            Als u denkt dat dit een fout is, maak dan via de link hieronder een issue aan op Github</p>
-        <a href="https://github.com/ZanderCeunen/Posta/issues/new" target="_blank">Rapporteer probleem op GitHub</a>
+        <h1 id="error-message">Error</h1>
+        <p>U heeft geen toegang tot deze pagina. </p>
+        <p>Als dit probleem zich blijft voordoen, maak via deze <a href="https://github.com/ZanderCeunen/Posta/issues/new" target="_blank">link</a> een issue aan op GitHub.</p>
+        <a href="/" class="return-button">Terug naar de hoofdpagina</a>
     </div>
+
+    <script>
+        // Lijst met willekeurige zinnen
+        var errorMessages = [
+            "Toegang geweigerd! Je hebt de verkeerde code ingeslagen, geen 'love' hier.",
+            "Deze pagina is als een gesloten tennisbaan - geen toegang zonder de juiste pas.",
+            "Fout! Je hebt niet het juiste lidmaatschap om deze 'match' te bekijken.",
+            "Geen 'advantage' voor jou! Deze pagina vereist een geldige inlog om te spelen.",
+                    ];
+
+        // Kies een willekeurige zin uit de lijst
+        var randomIndex = Math.floor(Math.random() * errorMessages.length);
+        var errorMessage = errorMessages[randomIndex];
+
+        // Voeg de willekeurige zin toe aan de h1-tag
+        document.getElementById("error-message").textContent = errorMessage;
+    </script>
 </body>
 </html>
