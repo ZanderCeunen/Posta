@@ -95,6 +95,7 @@ def secure():
         return redirect(url_for('secure'))
     return render_template('dashboard.html', items=items)
 
+
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
@@ -123,6 +124,18 @@ def upload():
 
     # Render the 'index.html' template
     return render_template("index.html")
+
+
+# Route for handling 404 errors
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html'), 404
+
+
+# Route for handling 401 errors
+@app.errorhandler(401)
+def unauthorized(error):
+    return render_template('401.html'), 401
 
 
 # If this script is run directly (not imported as a module)
