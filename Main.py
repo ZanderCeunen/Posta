@@ -1,22 +1,24 @@
 # Import the necessary modules
 from flask import Flask, request, render_template, redirect, url_for, send_from_directory
 from flask_login import LoginManager, login_user, login_required, logout_user
+from flask_apscheduler import APScheduler
 from Data_Core import *
-import hashlib
-import requests
+import os, time, requests, hashlib
 
 # Create an instance of the Flask class
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'een geheime sleutel'
-
 correct_hash = "set your passwordhash here"
 correct_user = "Set your user here"
-imgur_toegangstoken = "set your access token here"
-facebook_toegangstoken = "set your access token here"
+#facebook_toeganstoken is token.txt
+fb_app_id = "set your app id here"
+fb_app_secret = "set your app secret here"
 fb_id = "set your user or page id here"
+server_adres = "set your domain here"
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+planner = APScheduler()
 
 
 def hash_password(password):
@@ -26,33 +28,24 @@ def hash_password(password):
 
 
 def post(foto_locatie: str, beschrijving: str) -> bool:
-    imgur_url = "https://api.imgur.com/3/image"
-    imgur_headers = {
-        "Authorization": f"Bearer {imgur_toegangstoken}"
+    foto_url = f"http://{server_adres}/get_image/{foto_locatie}"
+
+    # Maak de URL voor de Facebook API-aanroep
+    with open("token.txt", "r") as f:
+        facebook_toegangstoken = f.read
+    facebook_url = f"https://graph.facebook.com/{fb_id}/photos"
+    facebook_data = {
+        "access_token": facebook_toegangstoken,
+        "url": foto_url,
+        "caption": beschrijving
     }
-    imgur_data = {
-        "image": foto_locatie,
-        "type": "file"
-    }
-    imgur_response = requests.post(imgur_url, headers=imgur_headers, data=imgur_data)
-    if imgur_response.status_code == 200:
-        foto_url = imgur_response.json()["data"]["link"]
-        # Maak de URL voor de Facebook API-aanroep
-        facebook_url = f"https://graph.facebook.com/{fb_id}/photos"
-        facebook_data = {
-            "access_token": facebook_toegangstoken,
-            "url": foto_url,
-            "caption": beschrijving
-        }
-        facebook_response = requests.post(facebook_url, data=facebook_data)
-        # Controleer de statuscode van het antwoord
-        if facebook_response.status_code == 200:
-            return True
-        else:
-            # Er is iets misgegaan met de Facebook API
-            return False
+    facebook_response = requests.post(facebook_url, data=facebook_data)
+
+    # Controleer de statuscode van het antwoord
+    if facebook_response.status_code == 200:
+        return True
     else:
-        # Er is iets misgegaan met de Imgur API
+        # Er is iets misgegaan met de Facebook API
         return False
 
 
@@ -126,7 +119,13 @@ def upload():
     return render_template("index.html")
 
 
+@app.route('/get_image/<image_name>')
+def get_image(image_name):
+    return send_from_directory("static", image_name)
+
 # Route for handling 404 errors
+
+
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html'), 404
@@ -138,6 +137,28 @@ def unauthorized(error):
     return render_template('401.html'), 401
 
 
+#keep the secret working
+def vernieuw_token():
+    with open("token.txt", "r") as f:
+        token = f.read()
+    # Controleer de vervaldatum van het token
+    url = f"https://graph.facebook.com/debug_token?input_token={token}&access_token={token}"
+    response = requests.get(url)
+    data = response.json()
+    expires_at = data["data"]["expires_at"]
+    # Als het token minder dan een dag geldig is, vernieuw het
+    if expires_at - time.time() < 86400:
+        url = f"https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id={fb_app_id}&client_secret={fb_app_secret}&fb_exchange_token={token}"
+        response = requests.get(url)
+        data = response.json()
+        token = data["access_token"]
+        # Schrijf het vernieuwde token terug naar het token.txt bestand
+        with open("token.txt", "w") as f:
+            f.write(token)
+
+
+planner.add_job(func=vernieuw_token,trigger="interval", days=1)
+planner.start()
 # If this script is run directly (not imported as a module)
 if __name__ == '__main__':
     # Run the app in debug mode
