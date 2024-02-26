@@ -9,7 +9,7 @@ import os, time, requests, hashlib
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'een geheime sleutel'
 correct_hash = "set your passwordhash here"
-correct_user = "Set your user here"
+correct_user = "user"
 #facebook_toeganstoken is token.txt
 fb_app_id = "set your app id here"
 fb_app_secret = "set your app secret here"
@@ -60,6 +60,7 @@ def admin():
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
+        correct_hash = hash_password("password")
         if username == correct_user and hash_password(password) == correct_hash:
             login_user(load_user(username))
             return redirect(url_for('secure'))
@@ -119,6 +120,12 @@ def upload():
     return render_template("index.html")
 
 
+@app.route('/config', methods=['GET', 'POST'])
+@login_required
+def config():
+    return render_template("config.html")
+
+
 @app.route('/get_image/<image_name>')
 def get_image(image_name):
     return send_from_directory("static", image_name)
@@ -157,7 +164,7 @@ def vernieuw_token():
             f.write(token)
 
 
-planner.add_job(func=vernieuw_token,trigger="interval", days=1)
+planner.add_job(func=vernieuw_token, trigger="interval", days=1, id="Z")
 planner.start()
 # If this script is run directly (not imported as a module)
 if __name__ == '__main__':

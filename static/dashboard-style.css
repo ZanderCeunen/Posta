@@ -80,3 +80,26 @@ img {
     position: sticky;
     bottom: 0;
 }
+
+.logout-button {
+    text-align: right;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
+.posta-button {
+    display: inline-block;
+    margin-right: 20px;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.posta-button:hover {
+    background-color: #0056b3;
+}
