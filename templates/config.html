@@ -8,9 +8,10 @@
     <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='logo.png') }}">
 </head>
 <body>
+    <a href="/" class="posta-button">Posta</a>
     <div class="overlay"></div>
     <div class="config-form">
-        <form id="config-form" action="{{ url_for('upload')}}" method="post" enctype="multipart/form-data">
+        <form id="config-form" action="{{ url_for('config')}}" method="post" enctype="multipart/form-data">
             <h2>Admin Configuratiemenu</h2>
             <h3>Achtergrondfoto:</h3>
             <label class="background-image">
@@ -27,9 +28,12 @@
             <img id="iconVoorbeeld" src="##"><br>
 
             <h3>Sitetitel:</h3>
-            <input type="text" id="site-title" name="site-title" placeholder="Sitetitel"><br>
+            <input type="text" name="site-title" id="site-title" placeholder="Sitetitle"><br><br>
 
-            <br><input type="submit" value="Opslaan">
+            <h3>Password:</h3>
+            <input type="password" name="password" id="password" placeholder="Password"><br><br>
+
+            <input type="submit" value="Opslaan">
         </form>
     </div>
     <script>

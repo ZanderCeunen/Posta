@@ -4,11 +4,12 @@ from flask_login import LoginManager, login_user, login_required, logout_user
 from flask_apscheduler import APScheduler
 from Data_Core import *
 import os, time, requests, hashlib
+import json
 
 # Create an instance of the Flask class
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'een geheime sleutel'
-correct_hash = "set your passwordhash here"
+correct_hash = json.load(open("static/config.json", "r"))["passwordHash"]
 correct_user = "user"
 #facebook_toeganstoken is token.txt
 fb_app_id = "set your app id here"
@@ -60,7 +61,6 @@ def admin():
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
-        correct_hash = hash_password("password")
         if username == correct_user and hash_password(password) == correct_hash:
             login_user(load_user(username))
             return redirect(url_for('secure'))
@@ -121,9 +121,44 @@ def upload():
 
 
 @app.route('/config', methods=['GET', 'POST'])
-# @login_required
+@login_required
 def config():
-
+    if request.method == "POST":
+        # If there is a file named 'background-image' in the request
+        if "background-image" in request.files:
+            # Get the file from the request
+            photo = request.files['background-image']
+            if photo.filename != '':
+                # Save the uploaded file to the 'uploads' directory
+                path = "static/achtergrond.png"
+                photo.save(path)
+        if "logo-image" in request.files:
+            # Get the file from the request
+            photo = request.files['logo-image']
+            if photo.filename != '':
+                # Save the uploaded file to the 'uploads' directory
+                path = "static/logo.png"
+                photo.save(path)
+        if "site-title" in request.form:
+            title = request.form.get('site-title')
+            if title != "":
+                filename = 'static/config.json'
+                with open(filename, 'r') as f:
+                    data = json.load(f)
+                    data['title'] = title
+                os.remove(filename)
+                with open(filename, 'w') as f:
+                    json.dump(data, f, indent=4)
+        if "password" in request.form:
+            passwordHash = hash_password(request.form.get('password'))
+            if passwordHash != "":
+                filename = 'static/config.json'
+                with open(filename, 'r') as f:
+                    data = json.load(f)
+                    data['passwordHash'] = passwordHash
+                os.remove(filename)
+                with open(filename, 'w') as f:
+                    json.dump(data, f, indent=4)
     return render_template("config.html")
 
 
