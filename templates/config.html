@@ -1,10 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Configuratie Menu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='config.css') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='logo.png') }}">
 </head>
 <body>
+    <div class="overlay"></div>
+    <div class="config-form">
+        <form id="config-form" action="{{ url_for('upload')}}" method="post" enctype="multipart/form-data">
+            <h2>Admin Configuratiemenu</h2>
+            <h3>Achtergrondfoto:</h3>
+            <label class="background-image">
+                <input type="file" id="background-image" name="background-image" accept="image/*">
+                Kies een foto<br>
+            </label><br>
+            <img id="achtergrondVoorbeeld" src="#"><br>
 
+            <h3>Logo:</h3>
+            <label class="logo-image">
+            <input type="file" id="logo-image" name="logo-image" accept="image/*">
+            Kies een foto<br>
+            </label><br>
+            <img id="iconVoorbeeld" src="##"><br>
+
+            <h3>Sitetitel:</h3>
+            <input type="text" id="site-title" name="site-title" placeholder="Sitetitel"><br>
+
+            <br><input type="submit" value="Opslaan">
+        </form>
+    </div>
+    <script>
+        const background = document.getElementById('background-image');
+        const icon = document.getElementById('logo-image');
+        const achtergrondVoorbeeld = document.getElementById('achtergrondVoorbeeld');
+        const iconVoorbeeld = document.getElementById('iconVoorbeeld');
+
+        background.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    achtergrondVoorbeeld.style.display = 'block';
+                    achtergrondVoorbeeld.src = reader.result;
+                }
+                reader.readAsDataURL(file);
+            } else {
+                achtergrondVoorbeeld.style.display = 'none';
+                achtergrondVoorbeeld.src = '#';
+            }
+        });
+        icon.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    iconVoorbeeld.style.display = 'block';
+                    iconVoorbeeld.src = reader.result;
+                }
+                reader.readAsDataURL(file);
+            } else {
+                iconVoorbeeld.style.display = 'none';
+                iconVoorbeeld.src = '##';
+            }
+        });
+    </script>
 </body>
 </html>

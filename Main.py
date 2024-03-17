@@ -121,8 +121,9 @@ def upload():
 
 
 @app.route('/config', methods=['GET', 'POST'])
-@login_required
+# @login_required
 def config():
+
     return render_template("config.html")
 
 
