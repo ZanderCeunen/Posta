@@ -1,7 +1,6 @@
 # Import the necessary modules
 from flask import Flask, request, render_template, redirect, url_for, send_from_directory
 from flask_login import LoginManager, login_user, login_required, logout_user
-from flask_apscheduler import APScheduler
 from Data_Core import *
 import os, time, requests, hashlib
 import json
@@ -19,7 +18,6 @@ server_adres = "set your domain here"
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-planner = APScheduler()
 
 
 def hash_password(password):
@@ -179,29 +177,6 @@ def page_not_found(error):
 def unauthorized(error):
     return render_template('401.html'), 401
 
-
-#keep the secret working
-def vernieuw_token():
-    with open("token.txt", "r") as f:
-        token = f.read()
-    # Controleer de vervaldatum van het token
-    url = f"https://graph.facebook.com/debug_token?input_token={token}&access_token={token}"
-    response = requests.get(url)
-    data = response.json()
-    expires_at = data["data"]["expires_at"]
-    # Als het token minder dan een dag geldig is, vernieuw het
-    if expires_at - time.time() < 86400:
-        url = f"https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id={fb_app_id}&client_secret={fb_app_secret}&fb_exchange_token={token}"
-        response = requests.get(url)
-        data = response.json()
-        token = data["access_token"]
-        # Schrijf het vernieuwde token terug naar het token.txt bestand
-        with open("token.txt", "w") as f:
-            f.write(token)
-
-
-planner.add_job(func=vernieuw_token, trigger="interval", days=1, id="Z")
-planner.start()
 # If this script is run directly (not imported as a module)
 if __name__ == '__main__':
     # Run the app in debug mode
