@@ -1,6 +1,6 @@
 # Import the necessary modules
 from flask import Flask, request, render_template, redirect, url_for, send_from_directory
-from flask_login import LoginManager, login_user, login_required, logout_user
+from flask_login import LoginManager, login_user, login_required, logout_user, UserMixin
 from Data_Core import *
 import os, time, requests, hashlib
 import json
@@ -9,7 +9,7 @@ import json
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'een geheime sleutel'
 correct_user = "user"
-#facebook_toeganstoken is token.txt
+# facebook_toeganstoken is token.txt
 fb_app_id = "set your app id here"
 fb_app_secret = "set your app secret here"
 fb_id = "set your user or page id here"
@@ -48,9 +48,27 @@ def post(foto_locatie: str, beschrijving: str) -> bool:
 
 
 @login_manager.user_loader
-def load_user(user):
-    if user == correct_user:
+def load_user(user_id):
+    # Check if the user ID matches the ID of your single user
+    if user_id == correct_user:
+        # Return a user object (you can create a simple User class)
+        return User(user_id)  # Replace with your actual User class instantiation
+
+    return None  # Return None if the user ID doesn't match
+
+
+class User(UserMixin):
+    def __init__(self, user_id):
+        self.id = user_id  # Set the user ID
+
+    def is_active(self):
+        # Since you have only one user, consider them always active
         return True
+
+    def get_id(self):
+        # Return the user ID as a string
+        return str(self.id)
+
 
 
 @app.route('/admin', methods=["POST", "GET"])
@@ -61,8 +79,6 @@ def admin():
         if username == correct_user and hash_password(password) == json.load(open("static/config.json", "r"))["passwordHash"]:
             login_user(load_user(username))
             return redirect(url_for('secure'))
-        # Now you have the username and password, you can perform authentication here
-        # Example: Check if the username and password match a user in the database
     return render_template('admin.html')
 
 
