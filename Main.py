@@ -8,7 +8,6 @@ import json
 # Create an instance of the Flask class
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'een geheime sleutel'
-correct_hash = json.load(open("static/config.json", "r"))["passwordHash"]
 correct_user = "user"
 #facebook_toeganstoken is token.txt
 fb_app_id = "set your app id here"
@@ -59,7 +58,7 @@ def admin():
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
-        if username == correct_user and hash_password(password) == correct_hash:
+        if username == correct_user and hash_password(password) == json.load(open("static/config.json", "r"))["passwordHash"]:
             login_user(load_user(username))
             return redirect(url_for('secure'))
         # Now you have the username and password, you can perform authentication here
