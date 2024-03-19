@@ -7,32 +7,43 @@ body {
     flex-direction: column;
     min-height: 100vh;
 }
+
+.nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    color: #fff;
+}
+
+.nav-button, .logout-button input[type="submit"] {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 30px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.nav-button:hover, .logout-button input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+
 .posta-button {
     position: absolute;
     top: 20px;
     left: 20px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 5px;
-    z-index: 2;
 }
 
-.posta-button:hover {
-    background-color: #0056b3;
-}
 .config-button {
     position: absolute;
     top: 20px;
-    right: 20px; /* Adjust the position as needed */
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 5px;
-    z-index: 2;
+    right: 20px;
 }
+
 
 .config-button:hover {
     background-color: #0056b3;
@@ -111,24 +122,6 @@ img {
     bottom: 0;
 }
 
-.logout-button {
-    text-align: right;
-    margin-right: 20px;
-    margin-top: 20px;
-}
-
-.posta-button {
-    display: inline-block;
-    margin-right: 20px;
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    text-decoration: none;
-    border: none;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
 
 .posta-button:hover {
     background-color: #0056b3;
