@@ -136,7 +136,7 @@ def upload():
 
 
 @app.route('/config', methods=['GET', 'POST'])
-# @login_required
+@login_required
 def config():
     error = None
     if request.method == "POST":
