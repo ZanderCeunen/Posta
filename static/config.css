@@ -8,6 +8,7 @@ body {
     padding: 0;
     font-family: Arial, sans-serif;
     height: 100vh;
+    overflow:hidden
 }
 
 .overlay {
@@ -34,14 +35,32 @@ body {
     background-color: #0056b3;
 }
 
-#config-form {
+.dashboard-button {
     position: absolute;
-    max_width: 600px;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    z-index: 2;
+}
+
+.dashboard-button:hover {
+    background-color: #0056b3;
+}
+
+#config-form {
+    overflow: auto;
+    position: absolute;
+    max_width: 50vw;
+    height: 80vh;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 2;
-    width: 600px;
+    width: 40vw;
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;

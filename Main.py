@@ -1,5 +1,6 @@
 # Import the necessary modules
-from flask import Flask, request, render_template, redirect, url_for, send_from_directory
+import flask
+from flask import Flask, request, render_template, redirect, url_for, send_from_directory, flash
 from flask_login import LoginManager, login_user, login_required, logout_user, UserMixin
 from Data_Core import *
 import os, time, requests, hashlib
@@ -137,6 +138,7 @@ def upload():
 @app.route('/config', methods=['GET', 'POST'])
 # @login_required
 def config():
+    error = None
     if request.method == "POST":
         # If there is a file named 'background-image' in the request
         try:
@@ -162,13 +164,30 @@ def config():
                 domain = request.form.get('domain')
                 if domain != "":
                     save_json("domain", domain)
+            if "fb_app_id" in request.form:
+                fb_app_id = request.form.get('fb_app_id')
+                if fb_app_id != "":
+                    save_json("fb_app_id", fb_app_id)
+            if "fb_id" in request.form:
+                fb_id = request.form.get('fb_id')
+                if fb_id != "":
+                    save_json("fb_id", fb_id)
+            if "fb_token" in request.form:
+                fb_token = request.form.get('fb_token')
+                if fb_token != "":
+                    save_json("fb_token", fb_token)
+            if "fb_secret" in request.form:
+                fb_secret = request.form.get('fb_secret')
+                if fb_secret != "":
+                    save_json("fb_app_secret", fb_secret)
             if "password" in request.form:
                 passwordHash = hash_password(request.form.get('password'))
                 if passwordHash != "":
                     save_json("passwordHash", passwordHash)
+            error = 0
         except:
-            pass
-    return render_template("config.html")
+            error = 1
+    return render_template("config.html", error=error)
 
 
 @app.route('/get_image/<image_name>')
