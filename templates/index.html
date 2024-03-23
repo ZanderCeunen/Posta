@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Foto Upload</title>
+    <title id="Title"></title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='logo.png') }}">
 </head>
 <body>
     <a href="/" class="posta-button">Posta</a>
+    <a href="/config" class="config-button">Configuratie Menu</a>
     <a href="/admin" class="admin-button">Admin Login</a>
     <div class="overlay"></div>
     <div id="upload-form">
@@ -41,6 +42,18 @@
                 imagePreview.src = '#';
             }
         });
+        fetch("static/config.json")
+                .then((res) => {
+                    if (!res.ok) {
+                        throw new Error
+                            (`HTTP error! Status: ${res.status}`);
+                    }
+                    return res.json();
+                })
+                .then((data) =>
+                      document.getElementById("Title").innerHTML = data.title)
+                .catch((error) =>
+                       console.error("Unable to fetch data:", error));
     </script>
 </body>
 </html>

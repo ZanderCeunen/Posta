@@ -28,13 +28,19 @@
             <img id="iconVoorbeeld" src="##"><br>
 
             <h3>Sitetitel:</h3>
-            <input type="text" name="site-title" id="site-title" placeholder="Sitetitle"><br><br>
+            <input type="text" name="site-title" id="site-title" placeholder="Sitetitel"><br><br>
+
+            <h3>Domein:</h3>
+            <input type="text" name="domain" id="domain" placeholder="Domein"><br><br>
 
             <h3>Password:</h3>
-            <input type="password" name="password" id="password" placeholder="Password"><br><br>
+            <input type="password" name="password" id="password" placeholder="Wachtwoord"><br><br>
 
-            <input type="submit" value="Opslaan">
+            <input type="submit" value="Opslaan" onclick="myFunction()">
         </form>
+    </div>
+    <div class="popup">
+        <span class="popuptext" id="myPopup">Popup text...</span>
     </div>
     <script>
         const background = document.getElementById('background-image');
@@ -70,6 +76,11 @@
                 iconVoorbeeld.src = '##';
             }
         });
+        // When the user clicks on <div>, open the popup
+        function myFunction() {
+            var popup = document.getElementById("myPopup");
+            popup.classList.toggle("show");
+        }
     </script>
 </body>
 </html>

@@ -1,4 +1,8 @@
 {
-    "title": "Posta2",
-    "passwordHash": ""
+    "title": "Foto Upload",
+    "passwordHash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+    "domain": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+    "fb_app_id": "",
+    "fb_app_secret": "",
+    "fb_token": ""
 }

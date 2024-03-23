@@ -3,13 +3,13 @@ import requests
 import json
 import os
 
-
-fb_app_id = json.load(open("static/config.json", "r"))["fb_app_id"]
-fb_app_secret = json.load(open("static/config.json", "r"))["fb_app_id"]
+config_file = json.load(open("static/config.json", "r"))
+fb_app_id = config_file["fb_app_id"]
+fb_app_secret = config_file["fb_app_secret"]
 
 
 def vernieuw_token():
-    fb_token = json.load(open("static/config.json", "r"))["fb_token"]
+    fb_token = config_file["fb_token"]
     # Controleer de vervaldatum van het token
     url = f"https://graph.facebook.com/debug_token?input_token={fb_token}&access_token={fb_token}"
     response = requests.get(url)
