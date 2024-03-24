@@ -55,26 +55,17 @@
             <h3>Password:</h3>
             <input type="password" name="password" id="password" placeholder="Wachtwoord"><br><br>
 
-            <input type="submit" value="Opslaan" onclick="checkError()">
+            <input type="submit" value="Opslaan">
         </form>
+    </div>
+    <div class="popup" id="popup">
+        <p></p>
     </div>
     <script>
         const background = document.getElementById('background-image');
         const icon = document.getElementById('logo-image');
         const achtergrondVoorbeeld = document.getElementById('achtergrondVoorbeeld');
         const iconVoorbeeld = document.getElementById('iconVoorbeeld');
-
-        function checkError() {
-            const error = "{{ error }}";
-            console.log(error);
-
-            if (error == 1) {
-            alert("An Error Occurred While Saving, Please Try Again.");
-            }
-            else {
-                alert("Saved Succesfully");
-            }
-        };
 
         background.addEventListener('change', function() {
             const file = this.files[0];
@@ -105,6 +96,37 @@
                 iconVoorbeeld.src = '##';
             }
         });
+        document.getElementById("config-form").addEventListener("submit", function(event) {
+          event.preventDefault();
+          const error = "{{ error }}";
+          document.getElementById("config-form").reset();
+          document.getElementById("config-form").scrollTop = 0;
+
+          // Display the popup
+          var popup = document.getElementById("popup");
+          if (error == 0) {
+            popup.innerHTML = "Saved Succesfully!";
+          }
+          else{
+            popup.innerHTML = "An Error Occurred While Saving, Please Try Again!";
+            console.log(error);
+          }
+          popup.style.display = "block";
+          // Fade in the popup
+              setTimeout(function() {
+                popup.style.opacity = "1";
+
+                // Fade out the popup after 2 seconds
+                setTimeout(function() {
+                  popup.style.opacity = "0";
+
+                  // Hide the popup and overlay after fade out
+                  setTimeout(function() {
+                    popup.style.display = "none";
+                  }, 400); // Change the duration of the fadeout animation (in milliseconds) as needed
+                }, 5000); // Change the duration of the delay before fading out (in milliseconds) as needed
+              }, 50); // Change the delay before fading in the popup (in milliseconds) as needed
+            });
     </script>
 </body>
 </html>

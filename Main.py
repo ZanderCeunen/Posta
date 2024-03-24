@@ -14,7 +14,7 @@ correct_user = "user"
 # facebook_toeganstoken is token.txt
 fb_app_id = "set your app id here"
 fb_app_secret = "set your app secret here"
-fb_id = "set your user or page id here"
+fb_id = config_file["fb_id"]
 server_adres = config_file["domain"]
 
 login_manager = LoginManager()
@@ -185,8 +185,9 @@ def config():
                 if passwordHash != "":
                     save_json("passwordHash", passwordHash)
             error = 0
-        except:
+        except Exception as e:
             error = 1
+            print(e)
     return render_template("config.html", error=error)
 
 
