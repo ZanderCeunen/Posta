@@ -135,14 +135,15 @@ def upload():
     return render_template("index.html")
 
 
-@app.route('/config', methods=['GET', 'POST'])
-@login_required
+@app.route('/config', methods=['POST', 'GET'])
+# @login_required
 def config():
     error = None
     if request.method == "POST":
-        # If there is a file named 'background-image' in the request
+        print("Post")
         try:
             if "background-image" in request.files:
+                # If there is a file named 'background-image' in the request
                 # Get the file from the request
                 photo = request.files['background-image']
                 if photo.filename != '':
@@ -186,7 +187,7 @@ def config():
                     save_json("passwordHash", passwordHash)
             error = 0
         except Exception as e:
-            error = 1
+            error = e
             print(e)
     return render_template("config.html", error=error)
 
@@ -195,9 +196,8 @@ def config():
 def get_image(image_name):
     return send_from_directory("static", image_name)
 
+
 # Route for handling 404 errors
-
-
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html'), 404
@@ -208,6 +208,7 @@ def page_not_found(error):
 def unauthorized(error):
     return render_template('401.html'), 401
 
+
 def save_json(path, file):
     filename = 'static/config.json'
     with open(filename, 'r') as f:
@@ -216,6 +217,8 @@ def save_json(path, file):
     os.remove(filename)
     with open(filename, 'w') as f:
         json.dump(data, f, indent=4)
+
+
 # If this script is run directly (not imported as a module)
 if __name__ == '__main__':
     # Run the app in debug mode

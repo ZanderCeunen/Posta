@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Configuratie Menu</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='config.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='config.css') }}">
     <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='logo.png') }}">
 </head>
 <body>
@@ -12,19 +12,19 @@
     <a href="/dashboard" class="dashboard-button">Dashboard</a>
     <div class="overlay"></div>
     <div class="config-form">
-        <form id="config-form" action="{{ url_for('config')}}" method="post" enctype="multipart/form-data">
+        <form id="config-form" action="{{url_for('config')}}" method="post" enctype="multipart/form-data">
             <h2>Admin Configuratiemenu</h2>
             <h3>Achtergrondfoto:</h3>
             <label class="background-image">
-                <input type="file" id="background-image" name="background-image" accept="image/*">
+                <input type="file" id="background-image" name="background-image" accept="image/png">
                 Kies een foto<br>
             </label><br>
             <img id="achtergrondVoorbeeld" src="#"><br>
 
             <h3>Logo:</h3>
             <label class="logo-image">
-            <input type="file" id="logo-image" name="logo-image" accept="image/*">
-            Kies een foto<br>
+                <input type="file" id="logo-image" name="logo-image" accept="image/png">
+                Kies een foto<br>
             </label><br>
             <img id="iconVoorbeeld" src="##"><br>
 
@@ -99,18 +99,20 @@
         document.getElementById("config-form").addEventListener("submit", function(event) {
           event.preventDefault();
           const error = "{{ error }}";
-          document.getElementById("config-form").reset();
-          document.getElementById("config-form").scrollTop = 0;
 
           // Display the popup
           var popup = document.getElementById("popup");
           if (error == 0) {
             popup.innerHTML = "Saved Succesfully!";
+            popup.style.backgroundColor = "#00cf00"
           }
           else{
             popup.innerHTML = "An Error Occurred While Saving, Please Try Again!";
             console.log(error);
+            popup.style.backgroundColor = "#cf0000"
           }
+          document.getElementById("config-form").reset();
+          document.getElementById("config-form").scrollTop = 0;
           popup.style.display = "block";
           // Fade in the popup
               setTimeout(function() {
