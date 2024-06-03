@@ -72,7 +72,6 @@ class User(UserMixin):
         return str(self.id)
 
 
-
 @app.route('/admin', methods=["POST", "GET"])
 def admin():
     if request.method == "POST":
@@ -136,7 +135,7 @@ def upload():
 
 
 @app.route('/config', methods=['POST', 'GET'])
-# @login_required
+@login_required
 def config():
     error = None
     if request.method == "POST":
